@@ -3,6 +3,26 @@ const fs = require('fs');
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 // ROUTE HANDLERS
+exports.checkID = (req,res,next,val) => {
+    console.log(`Running the check ID middleware for ID : ${val}`)
+    if(req.params.id * 1 > tours.length) {
+        return res.status(400).json({
+            status: 'Failure',
+            message: 'Invalid ID'
+        })
+    }
+    next();
+}
+
+exports.checkBody = (req,res,next) => {
+    if(!("name" in req.body) || !("price" in req.body)) {
+        return res.status(400).json({
+            status: "Failure",
+            message: "Bad request"
+        })
+    }
+    next();
+}
 
 exports.getAllTours =  (req,res) => {
     res.status(200).json({
@@ -30,52 +50,26 @@ exports.addTour =  (req,res) => {
 
 exports.getSingleTour = (req,res) => {
     const tour = tours.find(el => el.id == req.params.id);
-    if(tour) {
-        res.status(200).json({
-            status: 'success',
-            data : {
-                tour
-            }
-        })
-    }
-    else {
-        res.status(404).json({
-            status: 'failure',
-            message: 'Not Found'
-        })
-    }
+    res.status(200).json({
+        status: 'success',
+        data : {
+            tour
+        }
+    })
 }
 
 exports.updateTour =  (req,res) => {
-    const id = req.params.id;
-    if(id>tours.length) {
-        res.status(404).json({
-            status: 'failure',
-            message: 'Invalid ID'
-        })
-    }
-    else {
-        res.status(200).json({
-            status: 'success',
-            data: {
-                tour : 'Updated tour data...'
-            }
-        })
-    }
+    res.status(200).json({
+        status: 'success',
+        data: {
+            tour : 'Updated tour data...'
+        }
+    })
 }
 
 exports.deleteTour =  (req,res) => {
-    const id = req.params.id;
-    if(id>tours.length) {
-        res.status(404).json({
-            status: 'failure',
-            message: 'Invalid ID'
-        })
-    }
-    else {
-        res.status(204).json({
-            status: 'success',
-            data: null
-        })
-    }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    })
 }
