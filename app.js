@@ -6,12 +6,13 @@ const userRouter = require('./routes/user-routes');
 
 // MIDDLEWARE
 
-app.use(morgan('dev'));
+if(process.env.NODE_ENV === 'development')
+    app.use(morgan('dev'));
+else 
+    console.log('Running in production mode');
+
 app.use(express.json());
-app.use((req,res,next) => {
-    console.log('Hello from the middleware !!!');
-    next();
-})
+
 app.use(express.static('public'));
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
