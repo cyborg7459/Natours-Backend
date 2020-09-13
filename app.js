@@ -9,7 +9,7 @@ const userRouter = require('./routes/user-routes');
 if(process.env.NODE_ENV === 'development')
     app.use(morgan('dev'));
 else 
-    console.log('Running in production mode');
+    console.log('Running app in production mode');
 
 app.use(express.json());
 
