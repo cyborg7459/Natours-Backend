@@ -5,7 +5,7 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-si
 // ROUTE HANDLERS
 exports.checkID = (req,res,next,val) => {
     console.log(`Running the check ID middleware for ID : ${val}`)
-    if(req.params.id * 1 > tours.length) {
+    if(val * 1 > tours.length) {
         return res.status(400).json({
             status: 'Failure',
             message: 'Invalid ID'
