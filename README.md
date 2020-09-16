@@ -6,6 +6,7 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Express set up
 * Set up of tour routes (CRUD) with dummy local data
 * Very basic middlewares
+* Integration with database
 
 ## Next task
-* Intergrate with database
+* Create mongoose models for tours
