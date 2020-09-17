@@ -1,4 +1,5 @@
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('./../utils/apiFeatures');
 
 // ROUTE HANDLERS
 
@@ -9,55 +10,17 @@ exports.aliasTopTours = (req,res,next) => {
     next();
 }
 
+
+
 exports.getAllTours = async (req,res) => {
     try {
-        // Build a query 
-        const queryObj = {...req.query};
-        const excludedFields = ['page','sort','limit','fields'];
-        excludedFields.forEach(el => delete queryObj[el]);
-
-        // Advanced Filtering
-        let queryStr = JSON.stringify(queryObj);
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-        let query = Tour.find(JSON.parse(queryStr));
-
-        // Sorting
-        if(req.query.sort) {
-            let sortArray = req.query.sort.split(',');
-            let sortString = sortArray.join(' ');
-            query = query.sort(sortString);
-        } else {
-            query.sort('-createdAt');
-        }
-
-        // Field limiting
-        if(req.query.fields) {
-            const selectFields = req.query.fields.split(',').join(' ');
-            console.log(selectFields);
-            query = query.select(selectFields);
-        } 
-        else {
-            query = query.select('-__v');
-        }
-
-        // Pagination
-
-        if(req.query.limit) {
-            if(req.query.page) {
-                const start = req.query.limit * (Number(req.query.page) - 1);
-                query = query.skip(start).limit(Number(req.query.limit));
-            }
-            else {
-                query = query.skip(0).limit(Number(req.query.limit));
-            }
-        }
-        else {
-            query = query.skip(0).limit(10);
-        }
-
-        // Execute the query
-        const allTours = await query;
+        const features = new APIFeatures(Tour.find(), req.query)
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate();
+        
+        const allTours = await features.query;
 
         res.status(200).json({
             status: 'success',
