@@ -5,8 +5,11 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Basic file structure setup (Following the MVC architecture)
 * Express set up
 * Set up of tour routes (CRUD) with dummy local data
-* Very basic middlewares
+* Very basic middleware
 * Integration with database
+* Mongoose models created
+* API endpoints for tours written
+* Implemented API features of filtering, sorting, selecting, limiting and pagination, and also alias routes
 
 ## Next task
-* Create mongoose models for tours
+* Error handling
