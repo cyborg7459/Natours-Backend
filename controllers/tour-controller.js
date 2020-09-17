@@ -34,9 +34,24 @@ exports.getAllTours = async (req,res) => {
             query = query.select('-__v');
         }
 
+        // Pagination
+
+        if(req.query.limit) {
+            if(req.query.page) {
+                const start = req.query.limit * (Number(req.query.page) - 1);
+                query = query.skip(start).limit(Number(req.query.limit));
+            }
+            else {
+                query = query.skip(0).limit(Number(req.query.limit));
+            }
+        }
+        else {
+            query = query.skip(0).limit(10);
+        }
+
         // Execute the query
         const allTours = await query;
-        
+
         res.status(200).json({
             status: 'success',
             results: allTours.length,
