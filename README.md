@@ -12,4 +12,4 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Implemented API features of filtering, sorting, selecting, limiting and pagination, and also alias routes
 
 ## Next task
-* Error handling
+* Error handling with Express
