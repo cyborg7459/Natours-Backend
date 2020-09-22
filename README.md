@@ -10,6 +10,8 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Mongoose models created
 * API endpoints for tours written
 * Implemented API features of filtering, sorting, selecting, limiting and pagination, and also alias routes
+* Created tour statistics routes using aggregation pipeline
+* Wrote data validations in Tour model
 
 ## Next task
 * Error handling with Express
