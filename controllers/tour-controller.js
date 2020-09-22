@@ -10,8 +10,6 @@ exports.aliasTopTours = (req,res,next) => {
     next();
 }
 
-
-
 exports.getAllTours = async (req,res) => {
     try {
         const features = new APIFeatures(Tour.find(), req.query)
@@ -104,6 +102,42 @@ exports.deleteTour = async (req,res) => {
         })
     }
     catch (err) {
+        res.status(400).json({
+            status: 'Failure',
+            message: err
+        })
+    }
+}
+
+exports.getTourStats = async (req,res) => {
+    try {
+        const stats = await Tour.aggregate([
+            {
+                $match: { difficulty : { $in : ["easy", "difficult"] } }
+            },
+            {
+                $group: {
+                    _id: '$difficulty',
+                    numTours: { $sum: 1 },
+                    numRatings : { $sum: '$ratingsQuantity'},
+                    avgRating : { $avg: '$ratingsAverage' },
+                    avgPrice : { $avg : '$price' },
+                    minPrice : { $min : '$price' },
+                    maxPrice : { $max : '$price' }
+                }
+            },
+            {
+                $sort: {
+                    avgPrice: -1
+                }
+            }
+        ]);
+        res.status(200).json({
+            status : 'success',
+            data : stats
+        })
+    }
+    catch(err) {
         res.status(400).json({
             status: 'Failure',
             message: err
