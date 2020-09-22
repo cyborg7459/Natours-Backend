@@ -76,7 +76,7 @@ exports.updateTour =  async (req,res) => {
     try {
         const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
-            runValidators: true
+            runValidators: true  // this makes sure that if any validations are present in the model, then they are run at the time of updating tours as well, and not just at the time of creating them
         });
         res.status(200).json({
             status: 'success',
