@@ -12,6 +12,7 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Implemented API features of filtering, sorting, selecting, limiting and pagination, and also alias routes
 * Created tour statistics routes using aggregation pipeline
 * Wrote data validations in Tour model
+* Proper Error Handling with Express with separate error classes and controllers
 
 ## Next task
-* Error handling with Express
+* Authentication
