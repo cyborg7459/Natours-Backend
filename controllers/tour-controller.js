@@ -70,7 +70,7 @@ exports.getSingleTour = async (req,res,next) => {
     }
 }
 
-exports.updateTour =  async (req,res) => {
+exports.updateTour =  async (req,res, next) => {
     try {
         const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -87,10 +87,7 @@ exports.updateTour =  async (req,res) => {
         })
     }
     catch (err) {
-        res.status(400).json({
-            status: 'failure',
-            message: err
-        })
+        next(err);
     }
 }
 
