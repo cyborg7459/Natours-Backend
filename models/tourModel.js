@@ -51,9 +51,9 @@ tourSchema = new mongoose.Schema({
         type: Number,
         validate: {
             validator: function(val) {
-                return val < 200;
+                return val < this.price; // This would only be performed during document creation and not in update time because the keyword 'this' associated with the document in the creation time only
             },
-            message: 'Discount price should be below the 200'
+            message: 'Discount price should be below the actual price'
         }
     },
     summary: { 
@@ -88,7 +88,6 @@ tourSchema = new mongoose.Schema({
         virtuals: true
     }
 });
-
 
 tourSchema.virtual('durationWeeks').get(function() {
     return this.duration/7;
