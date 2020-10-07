@@ -1,3 +1,4 @@
+const appError = require('../utils/appError');
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
 
@@ -36,7 +37,7 @@ exports.getAllTours = async (req,res) => {
     }
 }
 
-exports.addTour = async (req,res) => {
+exports.addTour = async (req,res,next) => {
     try {
         const newTour = await Tour.create(req.body);
         res.status(201).json({
@@ -47,16 +48,16 @@ exports.addTour = async (req,res) => {
         })
     }
     catch (err) {
-        res.status(400).json({
-            status: 'failure',
-            message: err
-        })
+        next(err);
     }
 }
 
-exports.getSingleTour = async (req,res) => {
+exports.getSingleTour = async (req,res,next) => {
     try {
         const tour = await Tour.findById(req.params.id);
+        if(!tour) {
+            return next(new appError('No tour found with that ID', 404));
+        }
         res.status(200).json({
             status: 'success',
             data: {
@@ -65,10 +66,7 @@ exports.getSingleTour = async (req,res) => {
         })
     }
     catch (err) {
-        res.status(404).json({
-            status: 'failure',
-            message: err
-        })
+        next(err);
     }
 }
 
@@ -78,6 +76,9 @@ exports.updateTour =  async (req,res) => {
             new: true,
             runValidators: true  // this makes sure that if any validations are present in the model, then they are run at the time of updating tours as well, and not just at the time of creating them
         });
+        if(!tour) {
+            return next(new appError('No tour found with that ID', 404));
+        }
         res.status(200).json({
             status: 'success',
             data: {
@@ -95,7 +96,10 @@ exports.updateTour =  async (req,res) => {
 
 exports.deleteTour = async (req,res) => {
     try {
-        await Tour.findByIdAndDelete(req.params.id);
+        const tour = await Tour.findByIdAndDelete(req.params.id);
+        if(!tour) {
+            return next(new appError('No tour found with that ID', 404));
+        }
         res.status(200).json({
             status: 'Success',
             message: 'Successfully deleted tour'
