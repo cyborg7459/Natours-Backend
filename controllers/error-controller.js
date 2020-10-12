@@ -6,7 +6,7 @@ const handleCastErrorDB = err => {
 }
 
 const handleDuplicateErrorDB = err => {
-    const message = `Can't have same name for multiple tours`;
+    const message = `Duplicate value error`;
     return new appError(message, 400);
 }
 
