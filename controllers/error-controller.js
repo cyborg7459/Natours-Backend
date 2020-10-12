@@ -10,6 +10,11 @@ const handleDuplicateErrorDB = err => {
     return new appError(message, 400);
 }
 
+const handleValidationError = err => {
+    const message = err.message.split(',')[0].split(':')[2].trim();
+    return new appError(message, 400);
+}
+
 const devError = (err, res) => {
     res.status(err.statusCode).json({
         status: err.status,
@@ -46,6 +51,10 @@ module.exports = (err, req, res, next) => {
             error = handleCastErrorDB(error);
         else if(err.code === 11000)
             error = handleDuplicateErrorDB(error);
+        else if(err.message.includes("validation failed")) {
+            error.message = err.message;
+            error = handleValidationError(error);          
+        }
         prodError(error, res);
     }
 }
