@@ -25,7 +25,7 @@ const devError = (err, res) => {
 }
 
 const prodError = (err,res) => {
-    if(err.isOperational) {             // We don't need the customer to know the error if there's some error in programming or anything. Only operational errors like 404 not found or bas request need to be displayed in the production site
+    if(err.isOperational) {  
         res.status(err.statusCode).json({
             status: err.status,
             message: err.message,
