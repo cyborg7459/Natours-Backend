@@ -23,7 +23,13 @@ const userSchema = new mongoose.Schema({
     },
     passconf : {
         type: String,
-        required: [true, 'A confirmation password must be present']
+        required: [true, 'A confirmation password must be present'],
+        validate: {
+            validator: function(val) {
+                return val === this.password;
+            },
+            message: 'Password and confirm password do not match'
+        }
     }
 })
 
