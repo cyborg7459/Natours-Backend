@@ -5,7 +5,7 @@ const handleCastErrorDB = err => {
     return new appError(message, 400);
 }
 
-const handleDuplicateErrorDB = err => {
+const handleDuplicateErrorDB = () => {
     const message = `Duplicate value error`;
     return new appError(message, 400);
 }
@@ -14,6 +14,9 @@ const handleValidationError = err => {
     const message = err.message.split(',')[0].split(':')[2].trim();
     return new appError(message, 400);
 }
+
+const handleJWTError = () => new appError('Invalid authentication token !!! Please try again', 401);
+const handleTokenExpireError = () => new appError('Authentication token expired !!! Try again', 401);
 
 const devError = (err, res) => {
     res.status(err.statusCode).json({
@@ -28,8 +31,7 @@ const prodError = (err,res) => {
     if(err.isOperational) {  
         res.status(err.statusCode).json({
             status: err.status,
-            message: err.message,
-            error: err
+            message: err.message
         })
     }
     else {
@@ -50,11 +52,15 @@ module.exports = (err, req, res, next) => {
         if(err.stack.startsWith('CastError'))
             error = handleCastErrorDB(error);
         else if(err.code === 11000)
-            error = handleDuplicateErrorDB(error);
+            error = handleDuplicateErrorDB();
         else if(err.message.includes("validation failed")) {
             error.message = err.message;
-            error = handleValidationError(error);          
+            error = handleValidationError();          
         }
+        else if(error.name=='JsonWebTokenError')
+            error = handleJWTError(error);
+        else if(error.name=='TokenExpiredError')
+            error = handleTokenExpireError();
         prodError(error, res);
     }
 }

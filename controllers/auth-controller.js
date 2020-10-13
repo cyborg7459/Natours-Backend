@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const appError = require('../utils/appError');
 
 const createToken = id => {
+    console.log(process.env.JWT_EXPIRY);
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRY
     })
@@ -51,4 +52,26 @@ exports.login = async (req,res,next) => {
     catch (err) {
         next(err);
     }
+}
+
+exports.protect = async (req,res,next) => {
+    try {
+        let token;
+        if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+        if(!token)
+            return next(new appError('You are not logged in', 401));
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            if(err)
+                return next(err);
+            else {
+                console.log(decodedToken);
+                next();
+            }
+        })
+    }
+    catch (err) {
+        next(err);
+    } 
 }
