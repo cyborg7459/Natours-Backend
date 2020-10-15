@@ -4,7 +4,6 @@ const User = require('../models/userModel');
 const appError = require('../utils/appError');
 
 const createToken = id => {
-    console.log(process.env.JWT_EXPIRY);
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRY
     })
@@ -16,7 +15,8 @@ exports.signup = async (req,res,next) => {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            passconf: req.body.passconf
+            passconf: req.body.passconf,
+            passwordChangedAt: req.body.passwordChangedAt
         });
         const token = createToken(newUser._id);
         res.status(201).json({
@@ -57,16 +57,20 @@ exports.login = async (req,res,next) => {
 exports.protect = async (req,res,next) => {
     try {
         let token;
-        if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) 
             token = req.headers.authorization.split(' ')[1];
-        }
         if(!token)
             return next(new appError('You are not logged in', 401));
-        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if(err)
                 return next(err);
             else {
-                console.log(decodedToken);
+                const user = await User.findById(decodedToken.id);
+                if(!user)
+                    return next(new appError('Given user does not exist', 401));
+                if(user.changedPasswordAfter(decodedToken.iat))
+                    return next(new appError('Password was changed !!! Please login with the latest password', 401));
+                req.user = user;
                 next();
             }
         })
