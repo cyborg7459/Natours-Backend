@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
     passconf : {
         type: String,
         required: [true, 'A confirmation password must be present'],
+        // Since we need this validation to run even during update password, thus we never use findAndUpdate or similar functions, instead we make the changes and use the user.save() function so that all validators and pre-save hooks (like password hashing one) are run before saving the new credentials
         validate: {
             validator: function(val) {
                 return val === this.password;
@@ -60,6 +61,16 @@ userSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passconf = undefined;
     next();
+})
+
+userSchema.pre('save', function(next) {
+    if(!this.isModified('password') || this.isNew)
+        return next();
+    else {
+        // We subtract one second because sometimes as it happens is that this Date.now() is issued after the JWT is created, thus for the server it would mean that the password has changed after the JWT was issued, adn would thus restrict the user from accessing different routes
+        this.passwordChangedAt = Date.now() - 1000;
+        next();
+    }
 })
 
 userSchema.methods.correctPassword = function(password, userPassword) {
