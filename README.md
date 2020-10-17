@@ -13,6 +13,7 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Created tour statistics routes using aggregation pipeline
 * Wrote data validations in Tour model
 * Proper Error Handling with Express with separate error classes and controllers
+* Complete authentication with JSON web tokens with password reset functionality
 
 ## Next task
-* Authentication
+* Updating user data
