@@ -11,6 +11,17 @@ const createToken = id => {
     })
 }
 
+const sendToken = (user, statusCode, res) => {
+    const token = createToken(user._id);
+    res.status(statusCode).json({
+        status: 'Success',
+        token,
+        data: {
+            user
+        }
+    })
+}
+
 exports.signup = async (req,res,next) => {
     try {
         const newUser = await User.create({
@@ -21,14 +32,7 @@ exports.signup = async (req,res,next) => {
             passwordChangedAt: req.body.passwordChangedAt,
             role: req.body.role
         });
-        const token = createToken(newUser._id);
-        res.status(201).json({
-            status: 'Success',
-            token,
-            data: {
-                user: newUser
-            }
-        })
+        sendToken(newUser, 201, res);
     }
     catch (err) {
         next(err);
@@ -45,12 +49,7 @@ exports.login = async (req,res,next) => {
         if(!user || !await user.correctPassword(password, user.password)) {
             return next(new appError('Incorrect email or password', 401));
         }
-        
-        const token = createToken(user._id);
-        res.status(200).json({
-            status: 'Success',
-            token
-        })
+        sendToken(user, 200, res);
     }
     catch (err) {
         next(err);
@@ -115,18 +114,14 @@ exports.forgotPassword = async (req,res,next) => {
         await user.save({ validateBeforeSave: false });
         return next(new appError('There was an error sending the email!! Please try again', 500));
     }
-
-    res.status(200).json({
-        status: 'success',
-        message: 'Password reset token sent to your email'
-    })
+    sendToken(user, 200, res);
 };
 
 exports.resetPassword = async (req,res,next) => {
     try {
         const hashedToken = crypto.createHash('sha256')
-        .update(req.params.token)
-        .digest('hex');
+                                  .update(req.params.token)
+                                  .digest('hex');
         const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt : Date.now()}});
         if(!user)
         return next(new appError('Token is either invalid or expired', 400));
@@ -137,11 +132,26 @@ exports.resetPassword = async (req,res,next) => {
         await user.save();
         const token = createToken(user._id);
         res.status(200).json({
-        status: 'Success',
-        token
+            status: 'Success',
+            token
         })
     }
     catch(err) {
         next(err);
     }
 };
+
+exports.updatePassword = async (req,res,next) => {
+    try {
+        const user = await User.findById(req.user.id).select('+password');
+        if(!await user.correctPassword(req.body.currentPassword, user.password))
+            return next(new appError('Your current password is wrong', 401));
+        user.password = req.body.newPassword;
+        user.passconf = req.body.newPassconf;
+        await user.save();
+        sendToken(user, 200, res);
+    }
+    catch(err) {
+        next(err);
+    }
+}
