@@ -44,14 +44,13 @@ const userSchema = new mongoose.Schema({
             message: 'Password and confirm password do not match'
         }
     },
-    passwordChangedAt : {
-        type: Date
-    },
-    passwordResetToken : {
-        type: String
-    },
-    passwordResetExpires : {
-        type: Date
+    passwordChangedAt : Date,
+    passwordResetToken : String,
+    passwordResetExpires : Date,
+    active : { 
+        type: Boolean,
+        default: true,
+        select: false
     }
 })
 
@@ -72,6 +71,11 @@ userSchema.pre('save', function(next) {
         next();
     }
 })
+
+userSchema.pre(/^find/, function(next) {
+    this.find({ active: true });
+    next();
+});
 
 userSchema.methods.correctPassword = function(password, userPassword) {
     return bcrypt.compare(password, userPassword);
