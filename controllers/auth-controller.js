@@ -13,6 +13,15 @@ const createToken = id => {
 
 const sendToken = (user, statusCode, res) => {
     const token = createToken(user._id);
+    const cookieOptions = {
+        expiresIn: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRY *24*60*60*1000),
+        httpOnly: true  
+    }
+
+    if(process.env.NODE_ENV === 'production')
+        cookieOptions.secure = true;
+    res.cookie('jwt', token, cookieOptions);
+    user.password = undefined;
     res.status(statusCode).json({
         status: 'Success',
         token,
@@ -124,7 +133,7 @@ exports.resetPassword = async (req,res,next) => {
                                   .digest('hex');
         const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt : Date.now()}});
         if(!user)
-        return next(new appError('Token is either invalid or expired', 400));
+            return next(new appError('Token is either invalid or expired', 400));
         user.password = req.body.password;
         user.passconf = req.body.passconf;
         user.passwordResetToken = undefined;
