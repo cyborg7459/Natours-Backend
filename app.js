@@ -4,6 +4,8 @@ const app = express();
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 // Requiring functions and middleware
 const tourRouter = require('./routes/tour-routes');
@@ -12,22 +14,36 @@ const globalErrorHandler = require('./controllers/error-controller');
 const appError = require('./utils/appError');
 
 // MIDDLEWARE
-app.use(helmet());   // Security HTTP Headers
-if(process.env.NODE_ENV === 'development')      // Logging during development
+// Security HTTP Headers
+app.use(helmet());   
+
+// Logging during development
+if(process.env.NODE_ENV === 'development')      
     app.use(morgan('dev'));
 else 
     console.log('Running app in production mode');
 
+// Rate limiting
 const limiter = rateLimit({
     max: 100,
     windowMs: 60*60*1000,
     message: 'Too many requests from this IP, please try again in an hour!'
 });
-app.use('/api', limiter);       // Rate limiting
-app.use(express.json({
+app.use('/api', limiter);  
+
+// Body parser
+app.use(express.json({          
     limit: '10kb'
-}));        // Body parser
-app.use(express.static('public'));      // Serving static files
+}));        
+
+// Data Sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data Sanitization against XSS
+app.use(xss());
+
+// Serving static files
+app.use(express.static('public'));      
 
 // Routes
 app.use('/api/v1/tours', tourRouter);
