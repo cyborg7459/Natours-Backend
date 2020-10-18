@@ -44,7 +44,12 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Preventing parameter pollution
-app.use(hpp());
+app.use(hpp({
+    whitelist: [
+        'duration', 'ratingsQuantity', 'ratingsAverage', 'rating', 'maxGroupSize',
+        'price', 'difficulty'
+    ]
+}));
 
 // Serving static files
 app.use(express.static('public'));      
