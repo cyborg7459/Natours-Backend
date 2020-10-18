@@ -14,6 +14,8 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Wrote data validations in Tour model
 * Proper Error Handling with Express with separate error classes and controllers
 * Complete authentication with JSON web tokens with password reset functionality
+* Implemented CRUD operations on authenticated users
+* Implemented security features like Data Sanitization, rate limiting, etc
 
 ## Next task
-* Updating user data
+* Advanced data modelling
