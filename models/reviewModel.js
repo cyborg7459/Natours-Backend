@@ -34,9 +34,7 @@ const reviewSchema = new mongoose.Schema({
 })
 
 reviewSchema.pre('save', function(next) {
-    if(!(this.isModified('review') || this.isModified('rating')))
-        this.createdAt = Date.now();
-    else 
+    if(this.isModified('review') || this.isModified('rating'))
         this.updatedAt = Date.now();
     next();
 })
