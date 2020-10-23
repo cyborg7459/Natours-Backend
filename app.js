@@ -11,6 +11,7 @@ const hpp = require('hpp');
 // Requiring functions and middleware
 const tourRouter = require('./routes/tour-routes');
 const userRouter = require('./routes/user-routes');
+const reviewRouter = require('./routes/review-routes');
 const globalErrorHandler = require('./controllers/error-controller');
 const appError = require('./utils/appError');
 
@@ -57,6 +58,7 @@ app.use(express.static('public'));
 // Routes
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 app.all('*', (req,res,next) => {
     const err = new appError(`Can't find ${req.originalUrl} on the server !!!`, 404);
     next(err);
