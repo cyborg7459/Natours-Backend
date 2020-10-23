@@ -3,13 +3,7 @@ const APIfeatures = require('../utils/apiFeatures');
 
 exports.getAllReviews = async (req,res,next) => {
     try {
-        const features = new APIfeatures(Tour.find(), req.query)
-            .filter()
-            .sort()
-            .limitFields()
-            .paginate();
-        
-        const reviews = await features.query;
+        const reviews =  await Review.find();
         res.status(200).json({
             status: 'success',
             results: reviews.length,
@@ -31,7 +25,7 @@ exports.createReview = async (req,res,next) => {
             byUser: req.user._id,
             forTour: req.params.tourId
         }
-        const newReview = new Review.create(newReviewData);
+        const newReview = await Review.create(newReviewData);
         res.status(201).json({
             status: 'success',
             data: {

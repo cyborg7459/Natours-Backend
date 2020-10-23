@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
+const User = require('./userModel');
 
 const reviewSchema = new mongoose.Schema({
     review: {
@@ -33,8 +35,19 @@ const reviewSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 })
 
+reviewSchema.pre(/^find/, async function(next) {
+    this.populate({
+        path: 'byUser',
+        select: '-__v -passwordChangedAt'
+    });
+    this.populate({
+        path: 'forTour'
+    });
+    next();
+})
+
 reviewSchema.pre('save', function(next) {
-    if(this.isModified('review') || this.isModified('rating'))
+    if(!this.isNew)
         this.updatedAt = Date.now();
     next();
 })
