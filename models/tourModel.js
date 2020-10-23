@@ -125,11 +125,17 @@ tourSchema.pre('save', function(next) {
     next();
 })
 
-
-
 // QUERY MIDDLEWARE
 tourSchema.pre(/^find/, function(next) {
     this.find({secretTour: {$ne : true}});
+    next();
+})
+
+tourSchema.pre(/^find/, function(next) {
+    this.populate({
+        path: 'guides',
+        select: '-__v -passwordChangedAt'
+    });
     next();
 })
 
