@@ -19,3 +19,26 @@ exports.deleteOne = Model => {
             })
         }
 }};
+
+exports.updateOne = Model => {
+    return async (req,res, next) => {
+        try {
+            const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+                new: true,
+                runValidators: true  // this makes sure that if any validations are present in the model, then they are run at the time of updating tours as well, and not just at the time of creating them
+            });
+            if(!doc) {
+                return next(new appError('No record found with that ID', 404));
+            }
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    data : doc
+                }
+            })
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+}
