@@ -11,24 +11,15 @@ const filterObj = (obj, ...allowedFields) => {
     return newObj;
 }
 
-exports.getAllUsers = async (req,res, next) => {
-    try {
-        const users = await User.find({});
-        res.status(200).json({
-            status: "success",
-            data : {
-                users
-            }
-        })
-    }
-    catch (err) {
-        next(err);
-    }
-}
-
+exports.getAllUsers = factory.getAll(User);
 exports.getSingleUser = factory.getOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
+
+exports.getMe = (req,res,next) => {
+    req.params.id = req.user._id;
+    next();
+}
 
 exports.updateMe = async (req, res, next) => {
     try {
