@@ -13,6 +13,7 @@ router.route('/')
     )
 
 router.route('/:id')
+    .get(reviewController.getSingleReview)
     .delete(reviewController.deleteReview)
     .patch(reviewController.updateReview);
 
