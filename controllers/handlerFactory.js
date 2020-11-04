@@ -7,9 +7,9 @@ exports.deleteOne = Model => {
             if(!doc) {
                 return next(new appError('No record found with that ID', 404));
             }
-            res.status(200).json({
+            res.status(204).json({
                 status: 'Success',
-                message: 'Successfully deleted record'
+                data: null
             })
         }
         catch (err) {
