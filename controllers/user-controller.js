@@ -1,5 +1,6 @@
 const appError = require('../utils/appError');
 const User = require('../models/userModel');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
     let newObj = {};
@@ -46,12 +47,7 @@ exports.getSingleUser = (req,res) => {
     })
 }
 
-exports.deleteUser = (req,res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'Route not implemented yet'
-    })
-}
+exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMe = async (req, res, next) => {
     try {
