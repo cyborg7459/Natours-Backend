@@ -1,9 +1,5 @@
-const appError = require('../utils/appError');
 const Tour = require('./../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures');
 const factory = require('./handlerFactory');
-
-// ROUTE HANDLERS
 
 exports.aliasTopTours = (req,res,next) => {
     req.query.limit = '5';
@@ -12,32 +8,7 @@ exports.aliasTopTours = (req,res,next) => {
     next();
 }
 
-exports.getAllTours = async (req,res) => {
-    try {
-        const features = new APIFeatures(Tour.find(), req.query)
-            .filter()
-            .sort()
-            .limitFields()
-            .paginate();
-        
-        const allTours = await features.query;
-
-        res.status(200).json({
-            status: 'success',
-            results: allTours.length,
-            data: {
-                tours: allTours
-            }
-        })
-    }
-    catch (err) {
-        res.status(400).json({
-            status: 'failure',
-            message: err
-        })
-    }
-}
-
+exports.getAllTours = factory.getAll(Tour);
 exports.getSingleTour = factory.getOne(Tour, {path: 'reviews'});
 exports.addTour = factory.createOne(Tour);
 exports.updateTour =  factory.updateOne(Tour);
