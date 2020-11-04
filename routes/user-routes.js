@@ -13,7 +13,6 @@ router.patch('/deleteMe', authController.protect, userController.deleteMe);
 
 router.route('/')
     .get(userController.getAllUsers)
-    .post(userController.addUser);
 
 router.route('/:id')
     .get(userController.getSingleUser)
