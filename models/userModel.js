@@ -66,7 +66,7 @@ userSchema.pre('save', function(next) {
     if(!this.isModified('password') || this.isNew)
         return next();
     else {
-        // We subtract one second because sometimes as it happens is that this Date.now() is issued after the JWT is created, thus for the server it would mean that the password has changed after the JWT was issued, adn would thus restrict the user from accessing different routes
+        // We subtract one second because sometimes what happens is that this Date.now() function runs after the JWT is created, thus to the server it would mean that the password has changed after the JWT was issued, and would thus restrict the user from accessing different routes
         this.passwordChangedAt = Date.now() - 1000;
         next();
     }
