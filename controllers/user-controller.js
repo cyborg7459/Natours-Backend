@@ -33,13 +33,6 @@ exports.addUser = (req,res) => {
     })
 }
 
-exports.updateUser = (req,res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'Route not implemented yet'
-    })
-}
-
 exports.getSingleUser = (req,res) => {
     res.status(500).json({
         status: 'error',
@@ -47,6 +40,7 @@ exports.getSingleUser = (req,res) => {
     })
 }
 
+exports.updateUser = factory.deleteOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMe = async (req, res, next) => {
