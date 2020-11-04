@@ -38,21 +38,6 @@ exports.getAllTours = async (req,res) => {
     }
 }
 
-exports.addTour = async (req,res,next) => {
-    try {
-        const newTour = await Tour.create(req.body);
-        res.status(201).json({
-            status: 'success',
-            data: {
-                tour: newTour
-            }
-        })
-    }
-    catch (err) {
-        next(err);
-    }
-}
-
 exports.getSingleTour = async (req,res,next) => {
     try {
         const tour = await Tour.findById(req.params.id).populate('reviews');
@@ -71,6 +56,7 @@ exports.getSingleTour = async (req,res,next) => {
     }
 }
 
+exports.addTour = factory.createOne(Tour);
 exports.updateTour =  factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
 
