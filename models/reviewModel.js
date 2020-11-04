@@ -40,9 +40,6 @@ reviewSchema.pre(/^find/, async function(next) {
         path: 'byUser',
         select: '-__v -passwordChangedAt'
     });
-    this.populate({
-        path: 'forTour'
-    });
     next();
 })
 
