@@ -1,5 +1,4 @@
 const Review = require('../models/reviewModel');
-const APIfeatures = require('../utils/apiFeatures');
 
 exports.getAllReviews = async (req,res,next) => {
     try {
