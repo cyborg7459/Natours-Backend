@@ -71,27 +71,7 @@ exports.getSingleTour = async (req,res,next) => {
     }
 }
 
-exports.updateTour =  async (req,res, next) => {
-    try {
-        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true  // this makes sure that if any validations are present in the model, then they are run at the time of updating tours as well, and not just at the time of creating them
-        });
-        if(!tour) {
-            return next(new appError('No tour found with that ID', 404));
-        }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                tour
-            }
-        })
-    }
-    catch (err) {
-        next(err);
-    }
-}
-
+exports.updateTour =  factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
 
 exports.getTourStats = async (req,res) => {
