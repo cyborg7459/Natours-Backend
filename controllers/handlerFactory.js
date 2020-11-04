@@ -1,4 +1,5 @@
 const appError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.deleteOne = Model => {
     return async (req,res, next) => {
@@ -80,6 +81,34 @@ exports.getOne = (Model, populateOptions) => {
         }
         catch (err) {
             next(err);
+        }
+    }
+}
+
+exports.getAll = Model => {
+    return async (req,res) => {
+        try {
+            const features = new APIFeatures(Model.find(), req.query)
+                .filter()
+                .sort()
+                .limitFields()
+                .paginate();
+            
+            const allDocs = await features.query;
+    
+            res.status(200).json({
+                status: 'success',
+                results: allDocs.length,
+                data: {
+                    data: allDocs
+                }
+            })
+        }
+        catch (err) {
+            res.status(400).json({
+                status: 'failure',
+                message: err
+            })
         }
     }
 }
