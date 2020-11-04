@@ -23,11 +23,15 @@ exports.getAllReviews = async (req,res,next) => {
 
 exports.createReview = async (req,res,next) => {
     try {
+        if(!req.body.userId)
+            req.body.userId = req.user._id;
+        if(!req.body.tourId)
+            req.body.tourId = req.params.tourId;
         let newReviewData = {
             review: req.body.review,
             rating: req.body.rating,
-            byUser: req.user._id,
-            forTour: req.params.tourId
+            byUser: req.body.userId,
+            forTour: req.body.tourId
         }
         const newReview = await Review.create(newReviewData);
         res.status(201).json({
