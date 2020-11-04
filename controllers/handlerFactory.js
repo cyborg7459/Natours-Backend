@@ -60,3 +60,26 @@ exports.createOne = Model => {
         }
     }
 }
+
+exports.getOne = (Model, populateOptions) => {
+    return async (req,res,next) => {
+        try {
+            let query = Model.findById(req.params.id);
+            if(populateOptions)
+                query = query.populate(populateOptions);
+            const doc = await query;
+            if(!doc) {
+                return next(new appError('No record found with that ID', 404));
+            }
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    data: doc
+                }
+            })
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+}
