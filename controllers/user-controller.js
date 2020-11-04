@@ -40,7 +40,7 @@ exports.getSingleUser = (req,res) => {
     })
 }
 
-exports.updateUser = factory.deleteOne(User);
+exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMe = async (req, res, next) => {
