@@ -42,3 +42,20 @@ exports.updateOne = Model => {
         }
     }
 }
+
+exports.createOne = Model => {
+    return async (req,res,next) => {
+        try {
+            const newDoc = await Model.create(req.body);
+            res.status(201).json({
+                status: 'success',
+                data: {
+                    data: newDoc
+                }
+            })
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+}
