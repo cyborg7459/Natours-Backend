@@ -18,7 +18,7 @@ exports.getTourStats = async (req,res) => {
     try {
         const stats = await Tour.aggregate([
             {
-                $match: { difficulty : { $in : ["easy", "difficult"] } }
+                $match: { difficulty : { $in : ["easy", "difficult", "medium"] } }
             },
             {
                 $group: {

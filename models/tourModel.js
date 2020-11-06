@@ -36,7 +36,8 @@ tourSchema = new mongoose.Schema({
         max: [5, 'Rating must be between 1 and 5']
     },
     ratingsQuantity : {
-        type: Number
+        type: Number,
+        default: 0
     },
     rating: {
         type: Number,
