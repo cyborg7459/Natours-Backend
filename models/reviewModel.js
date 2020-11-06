@@ -69,6 +69,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
 }
 
 reviewSchema.post('save', function() {
+    // This points to the current review, and this.constructor points to the model
     this.constructor.calcAverageRatings(this.forTour);
 })
 
