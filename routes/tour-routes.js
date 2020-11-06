@@ -4,9 +4,10 @@ const tourController = require('../controllers/tour-controller');
 const authController = require('../controllers/auth-controller');
 const reviewRouter = require('../routes/review-routes');
 
-// Special routes
-
+// Redirecting to review router in case of nested route
 router.use('/:tourId/reviews', reviewRouter);
+
+// Special routes
 router.route('/top-5-cheap').get(tourController.aliasTopTours, tourController.getAllTours);
 router.route('/tour-stats').get(tourController.getTourStats);
 router.route('/monthly-plan/:year').get(
@@ -16,7 +17,6 @@ router.route('/monthly-plan/:year').get(
 );
 
 // Main routes
-
 router.route('/')
     .get(tourController.getAllTours)
     .post(
