@@ -13,6 +13,8 @@ exports.setTourUserID = (req,res,next) => {
 exports.authorizeUpdateAndDelete = async (req,res,next) => {
     if(req.user.role === 'user') {
         const review = await Review.findById(req.params.id);
+        if(!review)
+            return next();
         if(!review.byUser._id.equals(req.user._id))
             next(new appError('You are not allowed to change or delete another user\'s review', 403));
     }
