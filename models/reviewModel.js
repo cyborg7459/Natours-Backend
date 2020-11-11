@@ -73,6 +73,8 @@ reviewSchema.post('save', function() {
     this.constructor.calcAverageRatings(this.forTour);
 })
 
+// This part is to ensure review statistics on a tour are updated while updating and deleting a review as well. First of all, since this is a query middleware thus we cannot directly access the document because 'this' refers to the query. So we can await the query to get the document. However, there is one more problem - In 'pre' middleware the review is not yet updated thus the function will have no effect, while in post middleware the query will have executed and we can no longer await the query. Thus we use the trick that first we use pre middleware and await the document, and attach it to the query itself (this.r), now we can access this in the post middleware and apply .constructor to refer to the model, and then run the calcAverageRatings static function on the model
+
 reviewSchema.pre(/^findOneAnd/, async function(next) {
     this.r = await this.findOne();
     next();
