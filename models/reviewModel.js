@@ -34,6 +34,8 @@ const reviewSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 })
 
+reviewSchema.index({forTour: 1, byUser: 1}, {unique: true});
+
 reviewSchema.pre(/^find/, async function(next) {
     this.populate({
         path: 'byUser',
