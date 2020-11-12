@@ -16,8 +16,10 @@ A NodeJS learning project involving the creation of a restful API using NodeJS f
 * Complete authentication with JSON web tokens with password reset functionality
 * Implemented CRUD operations on authenticated users
 * Implemented security features like Data Sanitization, rate limiting, etc
-* Modelled the data with appropriate referencing
+* Modelled the data with appropriate referencing for reviews and users and tours
 * Wrote and implemented factory functions for commonly used routes
+* Implemented authorization
+* Implemented geospatial routes and queries
 
 ## Next task
-* Missing authorization in some places
+* Front-end portion
