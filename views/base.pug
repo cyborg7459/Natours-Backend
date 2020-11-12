@@ -5,7 +5,9 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet" href="css/style.css")
         link(rel="shortcut icon" type="image/png" href='img/logo-green-round.png')
-        title Natours.io
+        title Natours.io | #{tour}
     body    
-        h1 The Park Camper
-        p This is the base file for Natours.io
+        h1= tour
+        h3= user.toUpperCase()
+        - const x=10;
+        h3= x+20
