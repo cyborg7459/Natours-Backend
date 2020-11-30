@@ -28,3 +28,9 @@ exports.getTour = async (req,res,next) => {
         return next(err);
     }
 }
+
+exports.loginPage = (req,res) => {
+    res.status(200).render('login', {
+        title: 'Login'
+    })
+}
