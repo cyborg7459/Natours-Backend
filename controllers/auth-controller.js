@@ -167,3 +167,28 @@ exports.updatePassword = async (req,res,next) => {
         next(err);
     }
 }
+
+exports.isLoggedIn = async (req,res,next) => {
+    try {
+        if(req.cookies.jwt) {
+            jwt.verify(req.cookies.jwt, process.env.JWT_SECRET, async (err, decodedToken) => {
+                if(err)
+                    return next(err);
+                else {
+                    const user = await User.findById(decodedToken.id);
+                    if(!user)
+                        return next();
+                    if(user.changedPasswordAfter(decodedToken.iat))
+                        return next();
+
+                    res.locals.user = user;
+                    return next();
+                }
+            })
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    } 
+}
