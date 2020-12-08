@@ -23,8 +23,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));      
 
 // MIDDLEWARE
-// Security HTTP Headers
-app.use(helmet());   
+// // Security HTTP Headers
+// app.use(helmet());  
+// app.use(
+//     helmet.contentSecurityPolicy({
+//       directives: {
+//         "default-src": ["'self'"],
+//         "connect-src": ["'self'", "'unsafe-inline'"],
+//         "img-src": ["'self'", "data:"],
+//         "style-src-elem": ["'self'", "data:"],
+//         "script-src": ["'unsafe-inline'", "'self'"],
+//         "object-src": ["'none'"],
+//       },
+//     })
+// ); 
 
 // Logging during development
 if(process.env.NODE_ENV === 'development')      
@@ -33,12 +45,12 @@ else
     console.log('Running app in production mode');
 
 // Rate limiting
-const limiter = rateLimit({
-    max: 100,
-    windowMs: 60*60*1000,
-    message: 'Too many requests from this IP, please try again in an hour!'
-});
-app.use('/api', limiter);  
+// const limiter = rateLimit({
+//     max: 100,
+//     windowMs: 60*60*1000,
+//     message: 'Too many requests from this IP, please try again in an hour!'
+// });
+// app.use('/api', limiter);  
 
 // Body parser
 app.use(express.json({ limit: '10kb' }));
@@ -48,7 +60,7 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 
 // Data Sanitization against XSS
-app.use(xss());
+// app.use(xss());
 
 // Preventing parameter pollution
 app.use(hpp({
