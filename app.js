@@ -22,6 +22,11 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));      
 
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+       next();
+ });
+
 // MIDDLEWARE
 // // Security HTTP Headers
 // app.use(helmet());  

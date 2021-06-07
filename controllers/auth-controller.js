@@ -51,6 +51,7 @@ exports.signup = async (req,res,next) => {
 exports.login = async (req,res,next) => {
     try {
         const {email, password} = req.body;
+        console.log(`Received request with ${email} and ${password}`);
         if(!email || !password) {
             return next(new appError('Please provide email and password', 400));
         }
